@@ -38,3 +38,4 @@ Icon
 # CodeBlocks Files
 *.cbp
 *.layout
+*.depend
