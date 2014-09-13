@@ -32,6 +32,7 @@ int main(){
     int headerIndex = 0;        // index variable to tell where the beginning of a run is within a run list
     int clusterLengthBytes;     // right nibble of run list header, converted to integer
     int startingExtentBytes;    // left nibble of run list header, converted to integer
+    int runListLength;
 
     string runList,                 // stores initial run list entered by user
            newRunList = "",         // empty string to store user run list minus any spaces
@@ -41,12 +42,31 @@ int main(){
            startClusterDec[LEN],
            runHeaderL,              // string to store left nibble of run header
            runHeaderR,              // string to store right nibble of run header
-           run[LEN];                // array to store individual runs within run list (for output)
+           run[LEN],                // array to store individual runs within run list (for output)
+           lastRunByte = "";
     //--------------------------------------------------------------------------------------------------------
 
 
     cout << "Enter Run List (Hex): ";
     getline(cin, runList);
+
+    // checks that the last byte in run is 00
+    runListLength = runList.length();
+    lastRunByte += runList[runListLength - 2];
+    lastRunByte += runList[runListLength - 1];
+
+    while(lastRunByte != "00"){
+
+        cout << "ERROR - Run list must end with byte signature 00." << endl;
+        cout << "Enter Run List (Hex): ";
+        getline(cin, runList);
+        runListLength = runList.length();
+        lastRunByte = runList[runListLength - 2];
+        lastRunByte += runList[runListLength - 1];
+    }
+
+    cout << endl;
+    cout << "Run List Entered: " << runList << endl << endl;
 
     for (int i = 0; i < runList.length(); i++){
 
@@ -55,7 +75,6 @@ int main(){
             newRunList += runList[i];
         }
     }
-    cout << newRunList << endl;
 
     // store run header
     runHeaderL = newRunList[headerIndex];
@@ -63,16 +82,13 @@ int main(){
 
     // exit while when end of run reached
     while(runHeaderL != "0" && runHeaderR != "0")  {
-        // store run header
-        //runHeaderL = newRunList[headerIndex];
-        //runHeaderR = newRunList[headerIndex+1];
 
         // convert run header from string char to integers
         clusterLengthBytes = convertHex(runHeaderR);
         startingExtentBytes = convertHex(runHeaderL);
 
         // store individual runs for output report
-        for ( index = headerIndex; index < (((clusterLengthBytes * 2) + (startingExtentBytes * 2) + 2) + headerIndex); index++){
+        for ( index = headerIndex; index < (((clusterLengthBytes * 2) + (startingExtentBytes * 2) + 2) + headerIndex ); index++){
 
             run[index2] += newRunList[index];
 
