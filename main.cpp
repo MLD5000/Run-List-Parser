@@ -22,6 +22,8 @@ using namespace std;
 
 int convertHex(string);
 
+
+
 int main(){
 
     //---Variable Declarations------------------------------------------------------------------------------
@@ -50,23 +52,20 @@ int main(){
     cout << "Enter Run List (Hex): ";
     getline(cin, runList);
 
-    // checks that the last byte in run is 00
+    // gets the last byte
     runListLength = runList.length();
     lastRunByte += runList[runListLength - 2];
     lastRunByte += runList[runListLength - 1];
 
-    while(lastRunByte != "00"){
+    // checks for run list end byte signature 00.
+    if(lastRunByte != "00"){
 
-        cout << "ERROR - Run list must end with byte signature 00." << endl;
-        cout << "Enter Run List (Hex): ";
-        getline(cin, runList);
-        runListLength = runList.length();
-        lastRunByte = runList[runListLength - 2];
-        lastRunByte += runList[runListLength - 1];
+        cout << "NOTE - Last byte is not 00." << endl;
+        runList += " 00";
     }
 
     cout << endl;
-    cout << "Run List Entered: " << runList << endl << endl;
+    cout << "Run List Processed: " << runList << endl << endl;
 
     for (int i = 0; i < runList.length(); i++){
 
