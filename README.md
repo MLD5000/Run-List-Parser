@@ -1,6 +1,9 @@
 Run-List-Parser
 ===============
 
+   ##WORK IN PROGRESS##
+   ##NOT COMPLETE##
+   
     Description:
     A user can input the hexadecimal values of a run list from
     the $DATA attribute of a $MFT File record and the program
