@@ -2,6 +2,7 @@
 
     Programmer:     Matt Danner
     Program Name:   Run List Parser
+    version:        1.0
 
     Description:
     A user can input the hexadecimal values of a run list from
@@ -17,14 +18,25 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <array>
+#include <sstream>
+#include <cmath>
 
 using namespace std;
 
 int convertHex(string);
 
 
-
 int main(){
+
+    cout << "Program Name:   Run List Parser" << endl;
+    cout << "Programmer:     Matt Danner" << endl;
+    cout << "Version:        1.0" << endl << endl;
+
+    cout << "Instructions: " << endl;
+    cout << "Enter a complete runlist with or without spaces and be sure to end the run with 00 and press Enter." << endl;
+    cout << "-------------------------------------------------------------------------------" << endl << endl;
+
 
     //---Variable Declarations------------------------------------------------------------------------------
 
@@ -32,22 +44,27 @@ int main(){
     int index = 0;              // for loop index
     int index2 = 0;             // run array index
     int headerIndex = 0;        // index variable to tell where the beginning of a run is within a run list
-    int clusterLengthBytes;     // right nibble of run list header, converted to integer
-    int startingExtentBytes;    // left nibble of run list header, converted to integer
+    int clusterLengthBytes[LEN];     // right nibble of run list header, converted to integer
+    int startingExtentBytes[LEN];    // left nibble of run list header, converted to integer
     int runListLength;
+    int jumpValue[LEN];
+    int numClusters[LEN];
+    int startCluster = 0;
+
+    char choice;
 
     string runList,                 // stores initial run list entered by user
            newRunList = "",         // empty string to store user run list minus any spaces
-           jumpValueHex[LEN],       // array to store run jump values
-           jumpValueDec[LEN],
-           startClusterHex[LEN],    // array to store run starting cluster
-           startClusterDec[LEN],
+           jumpValueHex[LEN] = "",       // array to store run jump values
+           numClustersHex[LEN] = "",
            runHeaderL,              // string to store left nibble of run header
            runHeaderR,              // string to store right nibble of run header
            run[LEN],                // array to store individual runs within run list (for output)
-           lastRunByte = "";
+           lastRunByte = "",
+           runString = "";
     //--------------------------------------------------------------------------------------------------------
 
+    do{
 
     cout << "Enter Run List (Hex): ";
     getline(cin, runList);
@@ -80,32 +97,113 @@ int main(){
     runHeaderR = newRunList[headerIndex+1];
 
     // exit while when end of run reached
-    while(runHeaderL != "0" && runHeaderR != "0")  {
+    while(runHeaderL != "0" && runHeaderR != "0")
+    {
 
         // convert run header from string char to integers
-        clusterLengthBytes = convertHex(runHeaderR);
-        startingExtentBytes = convertHex(runHeaderL);
+        clusterLengthBytes[index2] = convertHex(runHeaderR);
+        startingExtentBytes[index2] = convertHex(runHeaderL);
 
         // store individual runs for output report
-        for ( index = headerIndex; index < (((clusterLengthBytes * 2) + (startingExtentBytes * 2) + 2) + headerIndex ); index++){
-
+        for ( index = headerIndex; index < (((clusterLengthBytes[index2] * 2) + (startingExtentBytes[index2] * 2) + 2) + headerIndex ); index++ )
+        {
             run[index2] += newRunList[index];
-
         }
+
+        runString = run[index2];
+
+        // reverse the jump value to little endian notation and store each jump value into an array
+        for (int j = ( clusterLengthBytes[index2] * 2) + (startingExtentBytes[index2] * 2); j > clusterLengthBytes[index2] + 2; j -= 2 )
+        {
+            jumpValueHex[index2] += runString[j];
+            jumpValueHex[index2] += runString[j+1];
+
+            // convert jump value string to integer and store in array
+            stringstream ss;
+            ss << hex << jumpValueHex[index2];
+            ss >> jumpValue[index2];
+            ss.str(string());
+            ss.clear();
+        }
+
+        for ( int j = (clusterLengthBytes[index2] * 2); j >= 2; j -= 2 )
+        {
+            numClustersHex[index2] += runString[j];
+            numClustersHex[index2] += runString[j+1];
+
+            stringstream ss;
+            ss << hex << numClustersHex[index2];
+            ss >> numClusters[index2];
+            ss.str(string());
+            ss.clear();
+        }
+
+        int mask = pow(2, ((startingExtentBytes[index2] * 8) - 1));
+        if ( ((jumpValue[index2] & mask) == mask) && index2 > 0)
+        {
+            mask = (pow(2, startingExtentBytes[index2] * 8) - 1);
+            jumpValue[index2] -= 1;
+            jumpValue[index2] = (jumpValue[index2] ^ mask) * -1;
+        }
+
+
+        headerIndex += ((clusterLengthBytes[index2] * 2) + (startingExtentBytes[index2] * 2) + 2);
         index2++;
-        headerIndex += ((clusterLengthBytes * 2) + (startingExtentBytes * 2) + 2);
 
         runHeaderL = newRunList[headerIndex];
         runHeaderR = newRunList[headerIndex+1];
+    }
+
+    for ( int j = 0; j < index2; j++ ){
+
+        cout << "Run #" << j + 1 << ": " << endl;
+        cout << "--------------------------------" << endl;
+        cout << "Run: " << run[j] << endl;
+        if (j == 0)
+        {
+            cout << "Starting Cluster in Hex: " << jumpValueHex[j] << endl;
+            cout << "Starting Cluster in Dec: " << jumpValue[j] << endl << endl;
+        }
+        else
+        {
+            cout << "Jump Value in Hex: " << jumpValueHex[j] << endl;
+            cout << "Jump Value in Dec: " << jumpValue[j] << endl << endl;
+        }
+    }
+
+    cout << endl << "File Fragments: " << endl;
+    cout << "--------------------------------" << endl << endl;
+    startCluster = jumpValue[0];
+
+    for ( int j = 0; j < index2; j++)
+    {
+        cout << "Fragment " << j + 1 << ": " << endl << endl;
+        if ( j == 0 )
+        {
+            int endCluster = jumpValue[j];
+            endCluster += numClusters[j];
+            cout << "Clusters " << jumpValue[j] << " - " << endCluster << endl << endl;
+        }
+
+        else
+        {
+
+            startCluster += jumpValue[j];
+            int endCluster = startCluster + numClusters[j];
+            cout << "Clusters " << startCluster << " - " << endCluster << endl << endl;
+        }
 
     }
 
-    for ( int j = 0; j < index2; j++){
+    cout << "Process another runlist (y/n)?";
+    cin.get(choice);
+    cout << endl;
+    cin.ignore();
 
-        cout << run[j] << endl;
+    }while (choice == 'y' || choice == 'Y');
 
-    }
-
+    cout << "Press Enter to quit...";
+    cin.get();
 
     return 0;
 }
