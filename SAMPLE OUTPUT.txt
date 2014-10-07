@@ -1,0 +1,92 @@
+Program Name:   Run List Parser
+Programmer:     Matt Danner
+Version:        1.0
+
+Instructions:
+Enter a complete runlist with or without spaces and be sure to end the run with
+00 and press Enter.
+-------------------------------------------------------------------------------
+
+Enter Run List (Hex): 21 02 b4 c3 32 01 10 d4 21 05 21 05 aa 55 31 03 11 a4 01 1
+1 01 a5 21 03 a1 94 32 01 f2 e2 31 07 00
+
+Run List Processed: 21 02 b4 c3 32 01 10 d4 21 05 21 05 aa 55 31 03 11 a4 01 11
+01 a5 21 03 a1 94 32 01 f2 e2 31 07 00
+
+Run #1:
+--------------------------------
+Run: 2102b4c3
+Starting Cluster in Hex: c3b4
+Starting Cluster in Dec: 50100
+
+Run #2:
+--------------------------------
+Run: 320110d42105
+Jump Value in Hex: 0521d4
+Jump Value in Dec: 336340
+
+Run #3:
+--------------------------------
+Run: 2105aa55
+Jump Value in Hex: 55aa
+Jump Value in Dec: 21930
+
+Run #4:
+--------------------------------
+Run: 310311a401
+Jump Value in Hex: 01a411
+Jump Value in Dec: 107537
+
+Run #5:
+--------------------------------
+Run: 1101a5
+Jump Value in Hex: a5
+Jump Value in Dec: -91
+
+Run #6:
+--------------------------------
+Run: 2103a194
+Jump Value in Hex: 94a1
+Jump Value in Dec: -27487
+
+Run #7:
+--------------------------------
+Run: 3201f2e23107
+Jump Value in Hex: 0731e2
+Jump Value in Dec: 471522
+
+
+File Fragments:
+--------------------------------
+
+Fragment 1:
+
+Clusters 50100 - 50102
+
+Fragment 2:
+
+Clusters 386440 - 390537
+
+Fragment 3:
+
+Clusters 408370 - 408375
+
+Fragment 4:
+
+Clusters 515907 - 515910
+
+Fragment 5:
+
+Clusters 515816 - 515817
+
+Fragment 6:
+
+Clusters 488329 - 488332
+
+Fragment 7:
+
+Clusters 959851 - 1021804
+
+Process another runlist (y/n)?n
+
+Press Enter to quit...
