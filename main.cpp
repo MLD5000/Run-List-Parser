@@ -84,6 +84,7 @@ int main(){
     cout << endl;
     cout << "Run List Processed: " << runList << endl << endl;
 
+
     for (int i = 0; i < runList.length(); i++){
 
         // remove spaces from input
@@ -113,7 +114,7 @@ int main(){
         runString = run[index2];
 
         // reverse the jump value to little endian notation and store each jump value into an array
-        for (int j = ( clusterLengthBytes[index2] * 2) + (startingExtentBytes[index2] * 2); j > clusterLengthBytes[index2] + 2; j -= 2 )
+        for (int j = ( clusterLengthBytes[index2] * 2) + (startingExtentBytes[index2] * 2); j >= (clusterLengthBytes[index2]*2) + 2; j -= 2 )
         {
             jumpValueHex[index2] += runString[j];
             jumpValueHex[index2] += runString[j+1];
