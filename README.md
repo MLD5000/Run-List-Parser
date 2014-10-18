@@ -10,3 +10,8 @@ Run-List-Parser
 
     The intended use of the program is to assist in the recovery of
     lost or deleted files during computer forensic analysis.
+    
+##Screenshot
+
+![Image](<http://i.imgur.com/4F3uGM3.png>)
+
