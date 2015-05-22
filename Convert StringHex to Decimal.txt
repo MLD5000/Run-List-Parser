@@ -1,0 +1,53 @@
+// Used with MS Visual C++ 2008 Express. Delete if using different compiler.
+#include <stdio.h>
+#include <conio.h>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void Pause();
+
+int main()
+{
+	string Hex_Upper = "0123456789ABCDEF", Hex_Lower = "0123456789abcdef", Hex_Num;
+	int Hex_Value[4]={4096,256,16,1},len = 0, x,y;
+	int Hex_Array[4]={0,0,0,0};
+	long Hex_Convert;
+	do
+	{
+		cout << "Enter a Hex number from 0 to FFFF :" << endl;
+		cin >> Hex_Num;
+		len = Hex_Num.length();
+	} while ( len < 1 || len > 4);
+	Hex_Convert=0;
+
+	for (x=0;x<len;x++)
+	{
+		for(y=0;y<16;y++)
+		{
+			if(Hex_Upper[y]==Hex_Num[x] || Hex_Lower[y]==Hex_Num[x])
+			{
+				Hex_Array[(4-len)+x] = Hex_Value[(4-len)+x]*y;
+				Hex_Convert = Hex_Convert +(Hex_Value[(4-len)+x]*y);
+			}
+		}
+	}
+
+	cout << endl << endl << "The value of " << Hex_Num << " in decimal is " << Hex_Convert << endl;
+
+	for(x=0;x<4;x++)
+		cout << "Hex_Array[" << x << "] = " << Hex_Array[x] << endl;
+
+	Pause();
+
+	return 0;
+}
+
+void Pause()
+{
+	cout << "\n\n\t\tPress any key to close program..\n\n";
+	while (_kbhit()) _getch(); // Empty the input buffer
+	_getch(); // Wait for a key
+	while (_kbhit()) _getch(); // Empty the input buffer (some keys sends two messages)
+}

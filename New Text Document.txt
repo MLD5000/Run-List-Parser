@@ -1,0 +1,81 @@
+///////////////////////////////////////////////////
+// Programmer:     Matt Danner                   //
+// Assignment:     2                             //
+// Description:    Quadratic Equations           //
+// Course:         COSC 2436 Data Structures     //
+// Date:           August 2, 2014                //
+///////////////////////////////////////////////////
+
+#include <iostream>
+#include "Quadratic.h"
+
+using namespace std;
+
+
+
+int main()
+{
+
+    Quadratic test1;
+    Quadratic test2;
+    Quadratic qSum;
+    Quadratic qProduct;
+    float a,
+          b,
+          c,
+          x;
+
+
+
+
+    cout << "\nEnter a value for 'a': ";
+    cin >> a;
+    cout << "Enter a value for 'b': ";
+    cin >> b;
+    cout << "Enter a value for 'c': ";
+    cin >> c;
+    cout << "Enter a value for 'x': ";
+    cin >> x;
+    cout << endl;
+
+
+    test1.setCoeff(a,b,c);
+    test2.setCoeff(a,b,c);
+
+    cout << "The result of ax^2 + bx + c is: ";
+
+    cout << test1.evalQuad(x) << endl << endl;
+
+    cout << "Number of real roots: ";
+    cout << test1.realRootNum(a,b,c) << endl << endl;
+
+    if(test1.realRootNum(a,b,c) == 2){
+        cout << "The real roots are: ";
+    }
+    else{
+        cout << "The real root is: ";
+    }
+
+    if(test1.realRootValue1(a,b,c) == test1.realRootValue2(a,b,c)){
+
+        cout << test1.realRootValue1(a,b,c) << endl;
+    }
+
+    else{
+
+        cout << test1.realRootValue1(a,b,c) << " and ";
+        cout << test1.realRootValue2(a,b,c) << endl << endl;
+    }
+
+
+
+    qSum = test1 + test2;
+    qSum.display();
+
+    qProduct = 5 * test1;
+    qProduct.display();
+
+
+
+    return 0;
+}
