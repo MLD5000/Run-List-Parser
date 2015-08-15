@@ -1,9 +1,0 @@
-# depslib dependency file v1.0
-1412725291 source:c:\users\matt\google drive\computer science\c++ projects\run-list-parser\main.cpp
-	<iostream>
-	<string>
-	<cassert>
-	<array>
-	<sstream>
-	<cmath>
-
